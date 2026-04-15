@@ -8,16 +8,16 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('merk', function (Blueprint $table) {
+        Schema::create('tipes', function (Blueprint $table) {
             $table->id();
-            $table->string('nama_merk');   // nama brand mobil
-            $table->string('negara_asal')->nullable();
+            $table->string('nama_tipe'); 
+            $table->text('deskripsi')->nullable(); 
             $table->timestamps();
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('merk');
+        Schema::dropIfExists('tipes');
     }
 };

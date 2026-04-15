@@ -17,16 +17,16 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
-    protected $table = "user"; // nama tabel di database
+    
 
     protected $fillable = [
-        'nama',
+        'nama',        // Dari bawaan 'name' kita ubah ke 'nama' sesuai migration
         'email',
-        'role',
-        'status',
         'password',
-        'no_hp',
-        'alamat'
+        'role',        // Kolom baru
+        'status',      // Kolom baru
+        'no_hp',       // Kolom baru
+        'alamat',      // Kolom baru
     ];
     /**
      * The attributes that should be hidden for serialization.

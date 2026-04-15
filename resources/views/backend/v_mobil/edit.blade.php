@@ -1,103 +1,75 @@
 @extends('backend.v_layouts.app')
 @section('content')
 
-<h3>{{ $judul }}</h3>
+<div class="mb-4">
+    <h3 class="fw-bold" style="color: #001437;">{{ $judul }}</h3>
+</div>
 
-<form action="{{ route('backend.mobil.update', $edit->id) }}" method="POST">
-    @method('PUT')
-    @csrf
+<div class="card border-0 shadow-sm" style="border-radius: 18px; border-left: 6px solid #FFC107;">
+    <div class="card-body p-4">
+        <form action="{{ route('backend.mobil.update', $edit->id) }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            @method('PUT')
+            
+            <div class="row">
+                <div class="col-md-6 border-end">
+                    <div class="mb-3">
+                        <label class="fw-bold text-muted mb-2">Tipe Mobil</label>
+                        <select name="tipe_id" class="form-select">
+                            @foreach ($tipe as $t)
+                                <option value="{{ $t->id }}" {{ $edit->tipe_id == $t->id ? 'selected' : '' }}>{{ $t->nama_tipe }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="fw-bold text-muted mb-2">Nama Mobil</label>
+                        <input type="text" name="nama_mobil" value="{{ $edit->nama_mobil }}" class="form-control">
+                    </div>
+                    <div class="row">
+                        <div class="col-6 mb-3">
+                            <label class="fw-bold text-muted mb-2">Tahun</label>
+                            <input type="number" name="tahun" value="{{ $edit->tahun }}" class="form-control">
+                        </div>
+                        <div class="col-6 mb-3">
+                            <label class="fw-bold text-muted mb-2">Warna</label>
+                            <input type="text" name="warna" value="{{ $edit->warna }}" class="form-control">
+                        </div>
+                    </div>
+                </div>
 
-    {{-- NAMA MOBIL --}}
-    <label>Nama Mobil</label><br>
-    <input type="text"
-        name="nama_mobil"
-        value="{{ old('nama_mobil', $edit->nama_mobil) }}"
-        placeholder="Masukkan Nama Mobil"
-        class="form-control @error('nama_mobil') is-invalid @enderror">
-    @error('nama_mobil')
-        <span class="invalid-feedback alert-danger">{{ $message }}</span>
-    @enderror
-    <p></p>
+                <div class="col-md-6 ps-md-4">
+                    <div class="mb-3">
+                        <label class="fw-bold text-muted mb-2">Harga Jual (Rp)</label>
+                        <input type="number" name="harga" value="{{ $edit->harga }}" class="form-control">
+                    </div>
+                    <div class="row">
+                        <div class="col-6 mb-3">
+                            <label class="fw-bold text-muted mb-2">Stok Unit</label>
+                            <input type="number" name="stok" value="{{ $edit->stok }}" class="form-control">
+                        </div>
+                        <div class="col-6 mb-3">
+                            <label class="fw-bold text-muted mb-2">Kapasitas</label>
+                            <input type="number" name="kapasitas" value="{{ $edit->kapasitas }}" class="form-control">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="fw-bold text-muted mb-2">Foto Saat Ini</label><br>
+                        <img src="{{ asset('storage/img_mobil/'.$edit->gambar_mobil) }}" class="rounded shadow-sm mb-2" style="width: 150px;">
+                        <input type="file" name="gambar_mobil" class="form-control">
+                    </div>
+                </div>
+            </div>
 
-    {{-- BRAND --}}
-    <label>Brand</label><br>
-    <input type="text"
-        name="brand"
-        value="{{ old('brand', $edit->brand) }}"
-        placeholder="Masukkan Brand Mobil"
-        class="form-control @error('brand') is-invalid @enderror">
-    @error('brand')
-        <span class="invalid-feedback alert-danger">{{ $message }}</span>
-    @enderror
-    <p></p>
+            <hr class="my-4">
 
-    {{-- TAHUN --}}
-    <label>Tahun</label><br>
-    <input type="number"
-        name="tahun"
-        value="{{ old('tahun', $edit->tahun) }}"
-        placeholder="Masukkan Tahun Mobil"
-        class="form-control @error('tahun') is-invalid @enderror">
-    @error('tahun')
-        <span class="invalid-feedback alert-danger">{{ $message }}</span>
-    @enderror
-    <p></p>
-
-    {{-- STOK --}}
-    <label>Stok</label><br>
-    <input type="number"
-        name="stok"
-        value="{{ old('stok', $edit->stok) }}"
-        placeholder="Masukkan Jumlah Stok"
-        class="form-control @error('stok') is-invalid @enderror">
-    @error('stok')
-        <span class="invalid-feedback alert-danger">{{ $message }}</span>
-    @enderror
-    <p></p>
-
-    {{-- WARNA --}}
-    <label>Warna</label><br>
-    <input type="text"
-        name="warna"
-        value="{{ old('warna', $edit->warna) }}"
-        placeholder="Masukkan Warna Mobil"
-        class="form-control @error('warna') is-invalid @enderror">
-    @error('warna')
-        <span class="invalid-feedback alert-danger">{{ $message }}</span>
-    @enderror
-    <p></p>
-
-    {{-- HARGA --}}
-    <label>Harga</label><br>
-    <input type="number"
-        name="harga"
-        value="{{ old('harga', $edit->harga) }}"
-        placeholder="Masukkan Harga Beli"
-        class="form-control @error('harga') is-invalid @enderror">
-    @error('harga')
-        <span class="invalid-feedback alert-danger">{{ $message }}</span>
-    @enderror
-    <p></p>
-
-    {{-- KAPASITAS --}}
-    <label>Kapasitas</label><br>
-    <input type="number"
-        name="kapasitas"
-        value="{{ old('kapasitas', $edit->kapasitas) }}"
-        placeholder="Masukkan Jumlah Penumpang"
-        class="form-control @error('kapasitas') is-invalid @enderror">
-    @error('kapasitas')
-        <span class="invalid-feedback alert-danger">{{ $message }}</span>
-    @enderror
-    <p></p>
-
-    {{-- BUTTON --}}
-    <button type="submit">Perbaharui</button>
-
-    <button type="button" onclick="window.location='{{ route('backend.mobil.index') }}'">
-        Batal
-    </button>
-
-</form>
+            <div class="d-flex justify-content-end">
+                <a href="{{ route('backend.mobil.index') }}" class="btn btn-light px-4 me-2 fw-bold">Batal</a>
+                <button type="submit" class="btn px-5 shadow-sm" style="background: #FFC107; color: #001437; font-weight: bold;">
+                    Perbarui Data
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
 
 @endsection

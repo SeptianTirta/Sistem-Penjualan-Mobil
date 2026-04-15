@@ -11,18 +11,21 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('user', function (Blueprint $table) {
-    $table->id();
-    $table->string('nama');                      // nama pengguna (admin / customer)
-    $table->string('email')->unique();           // email login
-    $table->enum('role', [0, 1, 2])->default(2); // 0 = Admin, 1 = Sales, 2 = Customer
-    $table->boolean('status')->default(1);       // 1 = aktif, 0 = nonaktif
-    $table->string('password');                  // kata sandi
-    $table->string('no_hp', 13);                 // nomor HP (biar rapi ganti 'hp' jadi 'no_hp')
-    $table->string('alamat')->nullable();        // alamat customer / dealer
-    $table->timestamps();
-});
-
+        // Pastikan namanya 'users' (pakai 's') agar sesuai standar Laravel
+        Schema::create('users', function (Blueprint $table) {
+            $table->id();
+            $table->string('nama');                      // Nama pengguna
+            $table->string('email')->unique();           // Email login
+            
+            // Cukup gunakan tinyInteger untuk Role (masukkan ke dalam blok ini)
+            $table->tinyInteger('role')->default(2);     // 1 = Super Admin, 0 = Admin, 2 = User/Customer
+            
+            $table->boolean('status')->default(1);       // 1 = aktif, 0 = nonaktif
+            $table->string('password');                  // Kata sandi
+            $table->string('no_hp', 15);                 // Nomor HP (saya ubah 15 jaga-jaga digit lebih panjang)
+            $table->text('alamat')->nullable();          // Alamat customer / dealer (pakai text agar muat panjang)
+            $table->timestamps();
+        });
     }
 
     /**

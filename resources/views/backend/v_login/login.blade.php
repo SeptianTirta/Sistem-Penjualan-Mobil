@@ -1,122 +1,169 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Sistem</title>
+    <title>Masuk | Suzuki Ratan</title>
 
-    <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 
     <style>
-        /* ===========================
-           DARK NAVY OCEAN BACKGROUND
-           =========================== */
         body {
-            background: #001437;
-            background: linear-gradient(150deg, #001437 0%, #00205A 40%, #001437 100%);
-            min-height: 100vh;
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: #f4f6f9;
+        }
+
+        .auth-wrapper {
             display: flex;
-            justify-content: center;
+            min-height: 100vh;
+        }
+
+        /* ===== LEFT SIDE (IMAGE) ===== */
+        .auth-left {
+            flex: 1;
+            background: linear-gradient(rgba(0,20,55,0.7), rgba(0,20,55,0.9)),
+                        url("{{ asset('img/suzuki-walpaper-login.jpg') }}") center/cover no-repeat;
+            color: white;
+            display: flex;
             align-items: center;
+            justify-content: center;
+            padding: 50px;
         }
 
-        /* CARD GLASS DARK */
-        .login-card {
-            width: 380px;
-            padding: 32px;
-            border-radius: 18px;
-            background: rgba(0, 18, 48, 0.65);
-            border: 1px solid rgba(255,255,255,0.06);
-            backdrop-filter: blur(8px);
+        .auth-left-content {
+            max-width: 500px;
         }
 
-        /* Judul */
-        .login-title {
-            font-weight: 700;
-            text-align: center;
-            color: #5CE5D5; /* Aqua highlight */
-            letter-spacing: 1px;
-            margin-bottom: 25px;
+        .auth-left h1 {
+            font-weight: 800;
+            font-size: 2.5rem;
         }
 
-        /* Label */
-        label {
-            font-weight: 500;
-            color: #7898FB; /* Blue soft */
+        .auth-left p {
+            opacity: 0.9;
         }
 
-        /* Icon */
-        .input-group-text {
-            background: #7898FB;
-            color: white;
-            border: none;
+        /* ===== RIGHT SIDE (FORM) ===== */
+        .auth-right {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #ffffff;
         }
 
-        /* Input */
+        .auth-card {
+            width: 100%;
+            max-width: 420px;
+            padding: 40px;
+        }
+
+        .brand-logo {
+            font-size: 2.5rem;
+            color: #EA5555;
+        }
+
         .form-control {
-            background: rgba(255,255,255,0.08);
-            border: none;
-            color: white;
-        }
-        .form-control::placeholder {
-            color: #c9c9c9;
+            padding: 12px;
+            border-radius: 10px;
+            background: #f8f9fa;
         }
 
-        /* Tombol Login */
+        .form-control:focus {
+            box-shadow: none;
+            border-color: #001437;
+        }
+
         .btn-login {
-            background: #0f6cb4e7;
-            color: #001437;
-            font-weight: 700;
-            padding: 10px 0;
-            border-radius: 10px;
+            background: #EA5555;
             border: none;
-            transition: 0.25s;
+            padding: 14px;
+            border-radius: 10px;
+            font-weight: bold;
+            transition: 0.3s;
         }
 
         .btn-login:hover {
-            background: #042a48ff;
+            background: #d14040;
+            transform: translateY(-2px);
         }
 
+        /* RESPONSIVE */
+        @media(max-width: 768px){
+            .auth-left {
+                display: none;
+            }
+        }
     </style>
 </head>
-
 <body>
 
-<div class="login-card">
+<div class="auth-wrapper">
 
-    <h3 class="login-title">LOGIN</h3>
-        
-    @if(session()->has('error'))
-        <div class="alert alert-danger">{{ session('error') }}</div>
-    @endif
-
-    <form action="{{ route('backend.login') }}" method="POST">
-        @csrf
-
-        <label>Email</label>
-        <div class="input-group mb-3">
-            <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
-            <input type="text" name="email" class="form-control" placeholder="Masukkan Email">
+    <!-- LEFT SIDE -->
+    <div class="auth-left">
+        <div class="auth-left-content">
+            <h1>Temukan Mobil Impianmu</h1>
+            <p>
+                Sistem penjualan mobil modern untuk pengalaman terbaik.
+                Jelajahi berbagai pilihan mobil dengan harga terbaik.
+            </p>
         </div>
+    </div>
 
-        <label>Password</label>
-        <div class="input-group mb-4">
-            <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
-            <input type="password" name="password" class="form-control" placeholder="Masukkan Password">
+    <!-- RIGHT SIDE -->
+    <div class="auth-right">
+        <div class="auth-card">
+
+            <div class="mb-3">
+                <a href="{{ route('beranda') }}" class="text-muted small text-decoration-none">
+                    <i class="bi bi-arrow-left"></i> Kembali
+                </a>
+            </div>
+
+            <div class="text-center mb-4">
+                <i class="bi bi-car-front-fill brand-logo"></i>
+                <h4 class="fw-bold mt-2">SUZUKI RATAN</h4>
+                <small class="text-muted">Silakan login ke akun Anda</small>
+            </div>
+
+            @if(session('success'))
+                <div class="alert alert-success small">{{ session('success') }}</div>
+            @endif
+
+            @if(session('error'))
+                <div class="alert alert-danger small">{{ session('error') }}</div>
+            @endif
+
+            <form action="{{ route('backend.login') }}" method="POST">
+                @csrf
+
+                <div class="mb-3">
+                    <label class="small fw-bold">Email</label>
+                    <input type="email" name="email" class="form-control" required>
+                </div>
+
+                <div class="mb-4">
+                    <label class="small fw-bold">Password</label>
+                    <input type="password" name="password" class="form-control" required>
+                </div>
+
+                <button class="btn btn-login w-100 text-white">
+                    Masuk
+                </button>
+
+                <div class="text-center mt-4">
+                    <small>Belum punya akun?</small>
+                    <a href="{{ route('register') }}" class="fw-bold text-danger">Daftar</a>
+                </div>
+            </form>
+
         </div>
+    </div>
 
-        <button type="submit" class="btn btn-login w-100">
-            Login
-        </button>
-
-    </form>
 </div>
-
-<!-- Bootstrap Icons -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>

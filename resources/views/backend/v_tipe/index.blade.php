@@ -3,17 +3,24 @@
 
 <div class="row align-items-center mb-4">
     <div class="col">
-        <h3 class="fw-bold m-0" style="color: #001437;">Daftar Armada</h3>
-        <p class="text-muted m-0">Kelola katalog mobil Suzuki Anda</p>
+        <h3 class="fw-bold m-0" style="color: #001437;">Kategori Tipe</h3>
+        <p class="text-muted m-0">Kelola klasifikasi armada Suzuki</p>
     </div>
     <div class="col-auto">
-        <a href="{{ route('backend.mobil.create') }}" 
+        <a href="{{ route('backend.tipe.create') }}" 
            class="btn px-4 py-2 shadow-sm"
            style="background:#EA5555; color:white; border-radius:10px;">
             <i class="bi bi-plus-lg me-2"></i>Tambah
         </a>
     </div>
 </div>
+
+{{-- ALERT --}}
+@if (session('success'))
+    <div class="alert alert-success small shadow-sm">
+        {{ session('success') }}
+    </div>
+@endif
 
 <div class="card border-0 shadow-sm" style="border-radius: 20px;">
     <div class="card-body p-0">
@@ -24,11 +31,9 @@
                 <!-- HEADER -->
                 <thead style="background: #f8f9fa;">
                     <tr style="font-size: 13px; color:#8a98ac; text-transform:uppercase;">
-                        <th class="ps-4 py-3 border-0">Mobil</th>
-                        <th class="border-0">Spesifikasi</th>
+                        <th class="ps-4 py-3 border-0">ID</th>
                         <th class="border-0">Kategori</th>
-                        <th class="border-0">Harga</th>
-                        <th class="border-0">Stok</th>
+                        <th class="border-0">Deskripsi</th>
                         <th class="border-0 text-center">Aksi</th>
                     </tr>
                 </thead>
@@ -38,43 +43,21 @@
                     @forelse ($index as $row)
                     <tr>
 
-                        <!-- MOBIL -->
-                        <td class="ps-4">
-                            <div class="d-flex align-items-center gap-3">
-                                <img src="{{ $row->gambar_mobil ? asset('storage/img_mobil/'.$row->gambar_mobil) : asset('storage/img_mobil/no-image.jpg') }}" 
-                                     class="rounded-3"
-                                     style="width: 70px; height: 50px; object-fit: cover;">
-                                <div>
-                                    <span class="fw-bold">{{ $row->nama_mobil }}</span>
-                                </div>
-                            </div>
+                        <!-- ID -->
+                        <td class="ps-4 text-muted">
+                            #{{ $row->id }}
                         </td>
 
-                        <!-- SPEK -->
+                        <!-- NAMA -->
                         <td>
-                            <div class="text-muted small">
-                                <div>{{ $row->warna }}</div>
-                                <div>{{ $row->tahun }}</div>
-                            </div>
-                        </td>
-
-                        <!-- KATEGORI -->
-                        <td>
-                            <span class="badge bg-light text-dark rounded-pill">
-                                {{ $row->tipe->nama_tipe ?? '-' }}
+                            <span class="fw-bold">
+                                {{ $row->nama_tipe }}
                             </span>
                         </td>
 
-                        <!-- HARGA -->
-                        <td class="fw-bold">
-                            Rp {{ number_format($row->harga,0,',','.') }}
-                        </td>
-
-                        <!-- STOK -->
-                        <td>
-                            <span class="fw-bold {{ $row->stok < 5 ? 'text-danger' : 'text-success' }}">
-                                {{ $row->stok }}
-                            </span>
+                        <!-- DESKRIPSI -->
+                        <td class="text-muted" style="max-width: 350px;">
+                            {{ \Illuminate\Support\Str::limit($row->deskripsi ?? '-', 80) }}
                         </td>
 
                         <!-- AKSI -->
@@ -91,16 +74,16 @@
                                     <!-- EDIT -->
                                     <li>
                                         <a class="dropdown-item"
-                                           href="{{ route('backend.mobil.edit', $row->id) }}">
+                                           href="{{ route('backend.tipe.edit', $row->id) }}">
                                             <i class="bi bi-pencil me-2"></i> Edit
                                         </a>
                                     </li>
 
                                     <!-- HAPUS -->
                                     <li>
-                                        <form action="{{ route('backend.mobil.destroy', $row->id) }}"
+                                        <form action="{{ route('backend.tipe.destroy', $row->id) }}"
                                               method="POST"
-                                              onsubmit="return confirm('Hapus data mobil ini?')">
+                                              onsubmit="return confirm('Hapus kategori ini?')">
                                             @csrf
                                             @method('DELETE')
 
@@ -118,8 +101,8 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="6" class="text-center py-5 text-muted">
-                            Belum ada data mobil.
+                        <td colspan="4" class="text-center py-5 text-muted">
+                            Belum ada kategori tipe.
                         </td>
                     </tr>
                     @endforelse

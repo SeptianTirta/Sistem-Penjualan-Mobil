@@ -1,116 +1,99 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $judul ?? 'Dashboard' }}</title>
-
-    <!-- Bootstrap -->
+    <title>Admin Panel | Suzuki Ratan</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-
-    <!-- icon mobil -->
-<link rel="apple-touch-icon" sizes="180x180" href="{{ asset('img/apple-touch-icon.png') }}">
-<link rel="icon" type="image/png" sizes="32x32" href="{{ asset('img/favicon-32x32.png') }}">
-<link rel="icon" type="image/png" sizes="16x16" href="{{ asset('img/favicon-16x16.png') }}">
-<link rel="manifest" href="{{ asset('img/site.webmanifest') }}">
-<link rel="shortcut icon" href="{{ asset('img/favicon.ico') }}"> 
-<meta name="msapplication-TileColor" content="#da532c">
-<meta name="theme-color" content="#ffffff">
+    
     <style>
-        /* ======= THEME WARNA ======= */
-        :root {
-            --navy: #001437;
-            --blue: #7898FB;
-            --aqua: #5CE5D5;
-            --white: #ffffff;
+        body { 
+            background-color: #f4f7f6; /* Abu-abu super terang untuk background */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            overflow-x: hidden;
         }
-
-        body {
-            background: #f5f7fa;
+        .navbar-custom { 
+            background-color: #ffffff; 
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03); 
+            padding: 15px 30px;
         }
-
-        /* ======= SIDEBAR ======= */
-        .sidebar {
-            width: 240px;
-            height: 100vh;
-            background: var(--navy);
-            position: fixed;
-            top: 0;
-            left: 0;
-            padding-top: 0px;
-        }
-
-        .sidebar a {
-            display: block;
-            padding: 12px 20px;
-            color: #d9e1ffff;
-            text-decoration: none;
-            font-size: 15px;
-            transition: 0.2s;
-        }
-
-        .sidebar a:hover {
-            background: var(--blue);
-            color: white;
-        }
-
-        .sidebar .active {
-            background: var(--blue);
-            color: white;
-        }
-
-        /* ======= NAVBAR ======= */
-        .main-navbar {
-            height: 60px;
-            background: var(--navy);
-            padding-left: 260px;
-            display: flex;
-            align-items: center;
-            padding-right: 20px;
-            color: white;
-            justify-content: space-between;
-        }
-
-        /* ======= KONTEN ======= */
         .content-wrapper {
-            margin-left: 260px;
-            margin-top: 20px;
-            padding: 20px;
+            padding: 40px;
         }
-
-        .footer {
-            margin-left: 260px;
-            margin-top: 40px;
-            padding: 15px;
-            background: #eee;
-            text-align: center;
-            font-size: 14px;
+        /* Kustomisasi Scrollbar Khas Suzuki */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #001437; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #EA5555; }
+        
+        /* Tambahan sedikit CSS agar panah dropdown tidak merusak layout */
+        .dropdown-toggle::after {
+            vertical-align: middle;
+            margin-left: 10px;
+            color: #001437;
         }
     </style>
-
 </head>
+<body class="d-flex">
 
-<body>
-
-    {{-- NAVBAR --}}
-    @include('backend.v_layouts.navbar')
-
-    {{-- SIDEBAR --}}
     @include('backend.v_layouts.sidebar')
 
-    <div class="content-wrapper">
-        @yield('content')
+    <div class="flex-grow-1 d-flex flex-column" style="min-height: 100vh; width: calc(100% - 260px);">
+        
+        <nav class="navbar navbar-expand-lg navbar-custom w-100 sticky-top">
+            <div class="container-fluid px-0">
+                <span class="navbar-brand fw-bold" style="color: #001437; font-size: 1.2rem;">
+                    Admin Area Panel
+                </span>
+                
+                <div class="dropdown ms-auto">
+                    <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" id="dropdownProfil" data-bs-toggle="dropdown" aria-expanded="false">
+                        <div class="me-3 text-end d-none d-md-block">
+                            <span class="d-block fw-bold" style="color: #001437; font-size: 15px;">{{ auth()->user()->nama }}</span>
+                            <span class="d-block text-muted" style="font-size: 12px; font-weight: 600; text-transform: uppercase;">
+                                {{ auth()->user()->role == 1 ? 'Super Admin' : 'Admin' }}
+                            </span>
+                        </div>
+                        <div class="rounded-circle d-flex justify-content-center align-items-center shadow-sm" 
+                             style="width: 45px; height: 45px; background: #001437; color: white; font-weight: bold; border: 2px solid #EA5555;">
+                            {{ strtoupper(substr(auth()->user()->nama, 0, 2)) }}
+                        </div>
+                    </a>
+
+                    <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 mt-3 rounded-3" aria-labelledby="dropdownProfil" style="min-width: 250px;">
+                        <li>
+                            <div class="dropdown-item-text text-center py-3">
+                                <div class="rounded-circle d-flex justify-content-center align-items-center mx-auto mb-2" 
+                                     style="width: 60px; height: 60px; background: #f4f7f6; color: #001437; font-weight: bold; font-size: 20px;">
+                                    {{ strtoupper(substr(auth()->user()->nama, 0, 2)) }}
+                                </div>
+                                <h6 class="fw-bold mb-0 text-dark">{{ auth()->user()->nama }}</h6>
+                                <small class="text-muted">{{ auth()->user()->email }}</small>
+                            </div>
+                        </li>
+                        <li><hr class="dropdown-divider opacity-25"></li>
+                        
+                        <li>
+                            <a class="dropdown-item py-2 text-danger fw-bold d-flex align-items-center justify-content-center bg-danger bg-opacity-10 rounded-bottom" href="{{ route('backend.logout') }}">
+                                <i class="bi bi-box-arrow-right me-2 fs-5"></i> Logout
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                </div>
+        </nav>
+
+        <div class="content-wrapper flex-grow-1">
+            @yield('content')
+        </div>
+
+        <footer class="text-center py-4 mt-auto" style="color: #a0a5b1; font-size: 13px; border-top: 1px solid #e9ecef;">
+            &copy; {{ date('Y') }} Dealer Resmi Suzuki Ratan. Hak cipta dilindungi.
+        </footer>
+
     </div>
 
-    <div class="footer">
-        © {{ date('Y') }} Penjualan Mobil • Tema Biru Laut Modern
-    </div>
-
-    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
 </body>
 </html>

@@ -1,151 +1,143 @@
 @extends('backend.v_layouts.app')
 @section('content')
 
-<style>
-.dashboard-banner{
-    background:linear-gradient(120deg,#001437,#0a2b6d,#7898FB);
-    color:#fff;
-    padding:30px;
-    border-radius:18px;
-    margin-bottom:25px;
-}
-.info-box{
-    background:#fff;
-    padding:18px;
-    border-radius:15px;
-    border-left:6px solid #7898FB;
-    box-shadow:0 3px 10px rgba(0,0,0,.1);
-}
-.info-title{font-weight:600;color:#001437}
-.info-number{font-size:22px;font-weight:bold;color:#001437}
-</style>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<h3 class="fw-bold mb-3">{{ $judul }}</h3>
-
-<div class="dashboard-banner">
-    <h2>Dashboard Penjualan Mobil</h2>
-    <span>Monitoring Data Penjualan</span>
-    <!-- Welcome card (punyamu tetap) -->
-<div class="welcome-card">
-    <p class="m-0" style="font-size: 15.5px;">
-        Selamat Datang, <b>{{ Auth::user()->nama }}</b> pada aplikasi Penjualan Mobil dengan hak 
-        akses sebagai 
-        <b>
-            @if (Auth::user()->role == 1)
-                Super Admin
-            @elseif(Auth::user()->role == 0)
-                Admin
-            @else
-                User
-            @endif
-        </b>
-        . Ini adalah halaman utama dari aplikasi ini.
-    </p>
-</div>
-</div>
-
-<!-- INFO BOX -->
-<div class="row">
-    <div class="col-md-4 mb-3">
-        <div class="info-box">
-            <div class="info-title">Total Mobil</div>
-            <div class="info-number">38</div>
+<div class="p-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h3 class="fw-bold" style="color: #001437; letter-spacing: -1px;">Halo, {{ auth()->user()->nama }}!</h3>
+            <p class="text-muted">Selamat datang kembali di pusat kendali Suzuki Ratan.</p>
         </div>
     </div>
-    <div class="col-md-4 mb-3">
-        <div class="info-box">
-            <div class="info-title">Total Merk</div>
-            <div class="info-number">7</div>
+
+    <div class="row g-4 mb-4">
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm p-3 h-100" style="border-radius: 20px; border-left: 5px solid #EA5555 !important;">
+                <div class="d-flex align-items-center">
+                    <div class="bg-danger bg-opacity-10 p-3 rounded-4 me-3"><i class="bi bi-car-front-fill text-danger fs-3"></i></div>
+                    <div>
+                        <small class="text-muted fw-bold text-uppercase" style="font-size: 11px;">Total Unit</small>
+                        <h3 class="fw-bold m-0">{{ $total_mobil }}</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm p-3 h-100" style="border-radius: 20px; border-left: 5px solid #0d6efd !important;">
+                <div class="d-flex align-items-center">
+                    <div class="bg-primary bg-opacity-10 p-3 rounded-4 me-3"><i class="bi bi-cart-check-fill text-primary fs-3"></i></div>
+                    <div>
+                        <small class="text-muted fw-bold text-uppercase" style="font-size: 11px;">Pesanan Masuk</small>
+                        <h3 class="fw-bold m-0">{{ $total_pesanan }}</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm p-3 h-100" style="border-radius: 20px; border-left: 5px solid #ffc107 !important;">
+                <div class="d-flex align-items-center">
+                    <div class="bg-warning bg-opacity-10 p-3 rounded-4 me-3"><i class="bi bi-people-fill text-warning fs-3"></i></div>
+                    <div>
+                        <small class="text-muted fw-bold text-uppercase" style="font-size: 11px;">Pelanggan</small>
+                        <h3 class="fw-bold m-0">{{ $total_user }}</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm p-3 h-100" style="border-radius: 20px; border-left: 5px solid #198754 !important;">
+                <div class="d-flex align-items-center">
+                    <div class="bg-success bg-opacity-10 p-3 rounded-4 me-3"><i class="bi bi-currency-dollar text-success fs-3"></i></div>
+                    <div>
+                        <small class="text-muted fw-bold text-uppercase" style="font-size: 11px;">Revenue Booking</small>
+                        <h4 class="fw-bold m-0 text-success">Rp {{ number_format($total_pendapatan, 0, ',', '.') }}</h4>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-    <div class="col-md-4 mb-3">
-        <div class="info-box">
-            <div class="info-title">Total User</div>
-            <div class="info-number">12</div>
+
+    <div class="row g-4">
+        
+        <div class="col-md-8">
+            <div class="card border-0 shadow-sm p-4 h-100" style="border-radius: 20px;">
+                <h6 class="fw-bold text-muted text-uppercase mb-4" style="letter-spacing: 1px;">Tren Pesanan (6 Bulan Terakhir)</h6>
+                <div style="position: relative; height: 300px; width: 100%;">
+                    <canvas id="grafikPesanan"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm p-4 h-100" style="border-radius: 20px;">
+                <h6 class="fw-bold text-muted text-uppercase mb-4" style="letter-spacing: 1px;">Top 5 Tipe Terlaris</h6>
+                <div style="position: relative; height: 250px; width: 100%; display: flex; justify-content: center;">
+                    <canvas id="grafikTipe"></canvas>
+                </div>
+            </div>
         </div>
     </div>
-</div>
 
-<!-- GRAFIK BATANG -->
-<div class="mt-5">
-    <h4 class="fw-bold mb-3">Grafik Penjualan Mobil (Bulanan)</h4>
-    <div class="card p-4 shadow-sm rounded-4">
-        <canvas id="grafikBatang" height="120"></canvas>
-    </div>
 </div>
-
-<!-- DIAGRAM LINGKARAN -->
-<div class="mt-5">
-    <h4 class="fw-bold mb-3">Diagram Lingkaran Merk Terbanyak</h4>
-    <div class="card p-4 shadow-sm rounded-4">
-        <canvas id="grafikLingkaran" height="120"></canvas>
-    </div>
-</div>
-
-<!-- CHART JS -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1"></script>
-<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
 
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-
-    /* ================= BAR CHART ================= */
-    new Chart(document.getElementById('grafikBatang'), {
-        type: 'bar',
-        data: {
-            labels: ['Jan','Feb','Mar','Apr','Mei','Jun'],
-            datasets: [{
-                label: 'Mobil Terjual',
-                data: [120, 180, 150, 230, 200, 260], // 🔥 ANGKA BESAR
-                backgroundColor: '#7898FB',
-                borderRadius: 10
-            }]
-        },
-        options: {
-            plugins: {
-                datalabels: {
-                    anchor: 'end',
-                    align: 'top',
-                    color: '#001437',
-                    font: { weight: 'bold' }
-                }
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        // 1. Inisialisasi Grafik Pesanan (Bar Chart)
+        const ctxPesanan = document.getElementById('grafikPesanan').getContext('2d');
+        new Chart(ctxPesanan, {
+            type: 'bar',
+            data: {
+                labels: {!! json_encode($label_bulan) !!},
+                datasets: [{
+                    label: 'Jumlah Pesanan',
+                    data: {!! json_encode($data_penjualan) !!},
+                    backgroundColor: 'rgba(13, 110, 253, 0.8)', // Biru Primary
+                    borderRadius: 8,
+                    barThickness: 30
+                }]
             },
-            scales: {
-                y: { beginAtZero: true }
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: { beginAtZero: true, grid: { borderDash: [5, 5] } },
+                    x: { grid: { display: false } }
+                },
+                plugins: { legend: { display: false } }
             }
-        },
-        plugins: [ChartDataLabels]
-    });
+        });
 
-    /* ================= PIE CHART ================= */
-    new Chart(document.getElementById('grafikLingkaran'), {
-        type: 'pie',
-        data: {
-            labels: [
-                'Toyota','Honda','Mitsubishi',
-                'BMW','Mercedes','Tesla','Porsche'
-            ],
-            datasets: [{
-                data: [320, 280, 210, 180, 160, 120, 90],
-                backgroundColor: [
-                    '#001437','#7898FB','#ff9f40',
-                    '#0a2b6d','#e63946','#4dabf7','#faa307'
-                ]
-            }]
-        },
-        options: {
-            plugins: {
-                legend: { position: 'right' },
-                datalabels: {
-                    color: '#fff',
-                    font: { weight: 'bold' }
+        // 2. Inisialisasi Grafik Tipe Mobil (Doughnut Chart)
+        const ctxTipe = document.getElementById('grafikTipe').getContext('2d');
+        new Chart(ctxTipe, {
+            type: 'doughnut',
+            data: {
+                labels: {!! json_encode($label_tipe) !!},
+                datasets: [{
+                    data: {!! json_encode($data_tipe) !!},
+                    backgroundColor: [
+                        '#EA5555', // Merah Suzuki
+                        '#001437', // Navy Blue
+                        '#ffc107', // Kuning
+                        '#198754', // Hijau
+                        '#0dcaf0', // Cyan
+                    ],
+                    borderWidth: 0,
+                    hoverOffset: 10
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '70%', // Membuat lubang donatnya besar ala dashboard modern
+                plugins: {
+                    legend: { position: 'bottom', labels: { usePointStyle: true, padding: 20 } }
                 }
             }
-        },
-        plugins: [ChartDataLabels]
+        });
     });
-
-});
 </script>
 
 @endsection
