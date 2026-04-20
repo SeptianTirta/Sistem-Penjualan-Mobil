@@ -5,7 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Backend\TipeController;
 use App\Http\Controllers\Backend\MobilController;
 use App\Http\Controllers\FrontendController;
-
+use App\Http\Controllers\GoogleAuthController;
 /*
 |--------------------------------------------------------------------------
 | FRONTEND ROUTES (Publik & Pelanggan)
@@ -24,6 +24,9 @@ Route::middleware(['auth', 'role:2'])->group(function () {
     Route::get('/pesanan-saya', [FrontendController::class, 'pesananSaya'])->name('pesanan.saya');
 });
 
+// Rute Login Google
+Route::get('/auth/google', [GoogleAuthController::class, 'redirect'])->name('google.login');
+Route::get('/auth/google/callback', [GoogleAuthController::class, 'callback'])->name('google.callback');
 /*
 |--------------------------------------------------------------------------
 | AUTHENTICATION ROUTES (Login & Logout)

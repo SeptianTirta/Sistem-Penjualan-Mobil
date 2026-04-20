@@ -27,6 +27,7 @@ class User extends Authenticatable
         'status',      // Kolom baru
         'no_hp',       // Kolom baru
         'alamat',      // Kolom baru
+        'google_id', //kolom baru untuk menyimpan google_id dari user yang login via google
     ];
     /**
      * The attributes that should be hidden for serialization.
