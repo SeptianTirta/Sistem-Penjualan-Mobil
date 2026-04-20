@@ -22,7 +22,6 @@
                             <th class="ps-4 py-3 border-0">Kode/Tanggal</th>
                             <th class="border-0">Pelanggan</th>
                             <th class="border-0">Unit Mobil</th>
-                            <th class="border-0">Bukti Bayar</th>
                             <th class="border-0 text-center">Status</th>
                             <th class="pe-4 text-center border-0">Aksi</th>
                         </tr>
@@ -43,47 +42,6 @@
                                     <span class="fw-bold">{{ $row->mobil->nama_mobil ?? 'Mobil Terhapus' }}</span><br>
                                     <small class="text-danger fw-bold">Rp
                                         {{ number_format($row->booking_fee, 0, ',', '.') }}</small>
-                                </td>
-                                <td>
-                                    <button type="button" class="btn btn-sm btn-light border shadow-sm rounded-pill"
-                                        title="Lihat Struk" data-bs-toggle="modal"
-                                        data-bs-target="#modalResi{{ $row->id }}">
-                                        <i class="bi bi-receipt text-success me-1"></i> Cek Resi
-                                    </button>
-                                    <!--  Pop Up Resi-->
-                                    <div class="modal fade" id="modalResi{{ $row->id }}" tabindex="-1"
-                                        aria-labelledby="modalResiLabel{{ $row->id }}" aria-hidden="true">
-                                        <div class="modal-dialog modal-dialog-centered modal-lg">
-                                            <div class="modal-content shadow-lg"
-                                                style="border-radius: 20px; overflow: hidden; border: none;">
-
-                                                <div class="modal-header border-0 bg-light px-4 py-3">
-                                                    <h5 class="modal-title fw-bold" id="modalResiLabel{{ $row->id }}"
-                                                        style="color: #001437;">
-                                                        <i class="bi bi-receipt me-2 text-success"></i>Bukti Pembayaran:
-                                                        <span class="text-primary">{{ $row->kode_booking }}</span>
-                                                    </h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                        aria-label="Close"></button>
-                                                </div>
-
-                                                <div class="modal-body text-center p-0 bg-dark" style="position: relative;">
-                                                    <img src="{{ asset('storage/' . $row->bukti_bayar) }}"
-                                                        class="img-fluid" alt="Struk Pembayaran"
-                                                        style="max-height: 75vh; width: 100%; object-fit: contain;">
-                                                </div>
-
-                                                <div
-                                                    class="modal-footer border-0 bg-light justify-content-center px-4 py-3">
-                                                    <span class="text-muted fw-bold" style="font-size: 15px;">
-                                                        Nominal Transfer: <span class="text-danger ms-1">Rp
-                                                            {{ number_format($row->booking_fee, 0, ',', '.') }}</span>
-                                                    </span>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                    </div>
                                 </td>
                                 <td class="text-center">
                                     @if ($row->status == 'Pending')
@@ -118,7 +76,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="text-center py-5">
+                                <td colspan="5" class="text-center py-5">
                                     <i class="bi bi-inbox fs-1 text-muted d-block mb-3"></i>
                                     <span class="text-muted">Belum ada pesanan masuk.</span>
                                 </td>

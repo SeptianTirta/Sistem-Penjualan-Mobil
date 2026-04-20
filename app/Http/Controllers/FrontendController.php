@@ -5,29 +5,25 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Mobil;
 use App\Models\Transaksi;
+use Midtrans\Config;
+use Midtrans\Snap;
 
 class FrontendController extends Controller
 {
     // Fungsi untuk Halaman Utama (Katalog)
     public function index(Request $request)
     {
-        // Ambil semua tipe untuk mengisi pilihan di Dropdown Kategori
         $tipes = \App\Models\Tipe::all();
-
-        // Mulai memanggil data mobil
         $query = Mobil::with('tipe')->latest();
 
-        // 1. Jika ada pencarian teks (nama mobil)
         if ($request->filled('search')) {
             $query->where('nama_mobil', 'like', '%' . $request->search . '%');
         }
 
-        // 2. Jika ada filter kategori/tipe yang dipilih
         if ($request->filled('kategori')) {
             $query->where('tipe_id', $request->kategori);
         }
 
-        // Eksekusi pengambilan data
         $mobils = $query->get();
 
         return view('frontend.index', compact('mobils', 'tipes'));
@@ -37,7 +33,7 @@ class FrontendController extends Controller
     public function show($id)
     {
         $mobil = Mobil::with('tipe')->findOrFail($id);
-        
+
         return view('frontend.detail', [
             'mobil' => $mobil
         ]);
@@ -46,52 +42,66 @@ class FrontendController extends Controller
     // Menampilkan halaman form booking
     public function booking($id)
     {
-        // Cukup panggil Mobil:: (Lebih bersih)
         $mobil = Mobil::findOrFail($id);
         return view('frontend.booking', compact('mobil'));
     }
 
-    // Memproses data form booking ke database
+    // Memproses data form booking dan memanggil Midtrans
     public function bookingStore(Request $request)
-{
-    $request->validate([
-        'mobil_id' => 'required',
-        'no_hp' => 'required|string|max:15',
-        'alamat_pengiriman' => 'required',
-        'bukti_bayar' => 'required|image|mimes:jpeg,png,jpg|max:2048',
-    ]);
+    {
+        // 1. Validasi tanpa bukti bayar
+        $request->validate([
+            'mobil_id' => 'required',
+            'no_hp' => 'required|string|max:15',
+            'alamat_pengiriman' => 'required',
+        ]);
 
-    $nama_file = '';
+        // 2. Simpan Transaksi ke Database (Status Pending)
+        $transaksi = Transaksi::create([
+            'user_id' => auth()->id(),
+            'mobil_id' => $request->mobil_id,
+            'kode_booking' => 'BKG-' . strtoupper(uniqid()),
+            'no_hp' => $request->no_hp,
+            'alamat_pengiriman' => $request->alamat_pengiriman,
+            'booking_fee' => 5000000,
+            'bukti_bayar' => '-', // Kita isi strip karena tidak pakai gambar lagi
+            'status' => 'Pending',
+        ]);
 
-    if ($request->hasFile('bukti_bayar')) {
-        $file = $request->file('bukti_bayar');
-        $nama_file = $file->store('bukti_bayar', 'public');
+        // 3. Konfigurasi Kunci Midtrans
+        Config::$serverKey = config('services.midtrans.server_key');
+        Config::$isProduction = config('services.midtrans.is_production');
+        Config::$isSanitized = config('services.midtrans.is_sanitized');
+        Config::$is3ds = config('services.midtrans.is_3ds');
+
+        // 4. Siapkan Rincian Tagihan untuk Midtrans
+        $params = array(
+            'transaction_details' => array(
+                'order_id' => $transaksi->kode_booking, // Pakai kode_booking agar mudah dilacak
+                'gross_amount' => 5000000,
+            ),
+            'customer_details' => array(
+                'first_name' => auth()->user()->nama,
+                'email' => auth()->user()->email,
+                'phone' => $request->no_hp,
+            ),
+        );
+
+        // 5. Minta Snap Token
+        $snapToken = Snap::getSnapToken($params);
+
+        // 6. Lempar ke halaman pembayaran dengan membawa Token
+        return view('frontend.pembayaran', compact('snapToken', 'transaksi'));
     }
-
-    Transaksi::create([
-        'user_id' => auth()->id(),
-        'mobil_id' => $request->mobil_id,
-        'kode_booking' => 'BKG-' . strtoupper(uniqid()),
-        'no_hp' => $request->no_hp,
-        'alamat_pengiriman' => $request->alamat_pengiriman,
-        'booking_fee' => 5000000,
-        'bukti_bayar' => $nama_file,
-        'status' => 'Pending',
-    ]);
-
-    return redirect()->route('pesanan.saya')
-        ->with('success', 'Hore! Booking Anda berhasil diterima.');
-}
 
     // Menampilkan riwayat pesanan pelanggan
     public function pesananSaya()
     {
-        // Ambil transaksi milik user yang sedang login, urutkan dari yang terbaru
         $pesanan = \App\Models\Transaksi::with('mobil')
-                    ->where('user_id', auth()->user()->id)
-                    ->latest()
-                    ->get();
-        
+            ->where('user_id', auth()->user()->id)
+            ->latest()
+            ->get();
+
         return view('frontend.pesanan_saya', compact('pesanan'));
     }
 }
