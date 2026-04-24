@@ -1,6 +1,3 @@
-Saya sudah perbaiki README kamu agar lebih konsisten, rapi, dan profesional. Berikut versi yang sudah dioptimalkan:
-
-````markdown
 # 🚗 Sigma Automobil - Sistem Informasi Dealer Mobil Terintegrasi
 
 ![Laravel](https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)
@@ -88,7 +85,6 @@ erDiagram
         string status "Pending, Diproses, Selesai, Batal"
     }
 ```
-````
 
 ### 2. Use Case Diagram
 
