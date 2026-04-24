@@ -78,16 +78,13 @@
         </div>
         <div class="carousel-inner">
             <div class="carousel-item active" data-bs-interval="5000">
-                <img src="https://images.unsplash.com/photo-1606152421802-db97b9c7a11b?q=80&w=2074" class="d-block w-100"
-                    alt="Banner 1">
+                <img src="{{ asset('img/suzuki-banner.jpg') }}" class="d-block w-100" alt="Banner 1">
             </div>
             <div class="carousel-item" data-bs-interval="5000">
-                <img src="https://images.unsplash.com/photo-1549399542-7e3f8b79c341?q=80&w=2070" class="d-block w-100"
-                    alt="Banner 2">
+                <img src="{{ asset('img/suzuki-banner1.jpg') }}" class="d-block w-100" alt="Banner 2">
             </div>
             <div class="carousel-item" data-bs-interval="5000">
-                <img src="https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?q=80&w=2070" class="d-block w-100"
-                    alt="Banner 3">
+                <img src="{{ asset('img/suzuki-banner2.jpg') }}" class="d-block w-100" alt="Banner 3">
             </div>
         </div>
         <button class="carousel-control-prev" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev">
@@ -181,8 +178,8 @@
 
             <div class="row align-items-center mb-5 pb-4">
                 <div class="col-md-6 mb-4 mb-md-0">
-                    <img src="https://images.unsplash.com/photo-1609521263047-f8f205293f24?q=80&w=800" alt="Promo 1"
-                        class="img-fluid rounded-5 shadow-sm" style="height: 400px; width: 100%; object-fit: cover;">
+                    <img src="{{ asset('img/suzuki-banner.jpg') }}" alt="Promo 1" class="img-fluid rounded-5 shadow-sm"
+                        style="height: 400px; width: 100%; object-fit: cover;">
                 </div>
                 <div class="col-md-5 offset-md-1">
                     <span class="badge bg-danger mb-3 px-3 py-2 rounded-pill fw-bold" style="letter-spacing: 1px;">BUNGA
@@ -208,7 +205,7 @@
                         Lebih Lanjut</a>
                 </div>
                 <div class="col-md-6 offset-md-1 order-1 order-md-2 mb-4 mb-md-0">
-                    <img src="https://images.unsplash.com/photo-1549317661-bd32c8ce0be2?q=80&w=800" alt="Promo 2"
+                    <img src="{{ asset('img/suzuki-banner3.jpg') }}" alt="Promo 2"
                         class="img-fluid rounded-5 shadow-sm" style="height: 400px; width: 100%; object-fit: cover;">
                 </div>
             </div>
@@ -220,7 +217,7 @@
             <div class="d-flex justify-content-between align-items-end mb-5">
                 <div>
                     <h2 class="fw-bold m-0" style="color: #001437; font-size: 2.5rem;">Berita & Update</h2>
-                    <p class="text-muted m-0 mt-2">Informasi terbaru seputar otomotif dan Suzuki Ratan</p>
+                    <p class="text-muted m-0 mt-2">Informasi terbaru seputar otomotif dan SIGMA Automobil</p>
                 </div>
                 <a href="#" class="text-danger fw-bold text-decoration-none d-none d-md-block">Lihat Semua <i
                         class="bi bi-arrow-right"></i></a>
@@ -232,7 +229,7 @@
                     <a href="#" class="text-decoration-none">
                         <div class="position-relative rounded-5 overflow-hidden shadow-sm h-100"
                             style="min-height: 400px;">
-                            <img src="https://images.unsplash.com/photo-1503376712351-1f55a1d7c35f?q=80&w=1000"
+                            <img src="{{ asset('img/suzuki-banner.jpg') }}"
                                 class="w-100 h-100 object-fit-cover position-absolute" alt="Berita 1"
                                 style="transition: transform 0.5s;" onmouseover="this.style.transform='scale(1.05)'"
                                 onmouseout="this.style.transform='scale(1)'">
@@ -253,7 +250,7 @@
                         <a href="#" class="text-decoration-none flex-fill">
                             <div class="position-relative rounded-5 overflow-hidden shadow-sm h-100"
                                 style="min-height: 190px;">
-                                <img src="https://images.unsplash.com/photo-1580273916550-e323be2ae537?q=80&w=600"
+                                <img src="{{ asset('img/suzuki-banner3.jpg') }}"
                                     class="w-100 h-100 object-fit-cover position-absolute" alt="Berita 2"
                                     style="transition: transform 0.5s;" onmouseover="this.style.transform='scale(1.05)'"
                                     onmouseout="this.style.transform='scale(1)'">
@@ -270,7 +267,7 @@
                         <a href="#" class="text-decoration-none flex-fill">
                             <div class="position-relative rounded-5 overflow-hidden shadow-sm h-100"
                                 style="min-height: 190px;">
-                                <img src="https://images.unsplash.com/photo-1494976388531-d1058494cdd8?q=80&w=600"
+                                <img src="{{ asset('img/suzuki-banner.jpg') }}"
                                     class="w-100 h-100 object-fit-cover position-absolute" alt="Berita 3"
                                     style="transition: transform 0.5s;" onmouseover="this.style.transform='scale(1.05)'"
                                     onmouseout="this.style.transform='scale(1)'">
@@ -292,8 +289,9 @@
 
     <footer class="py-4 border-top" style="background: #ffffff;">
         <div class="container text-center">
-            <h5 class="fw-bold mb-1" style="color: #001437;">SUZUKI RATAN MOBIL</h5>
-            <p class="text-muted small mb-0">&copy; {{ date('Y') }} Hak Cipta Dilindungi.</p>
+            <h5 class="fw-bold mb-1" style="color: #001437;">SIGMA AUTOMOBIL</h5>
+            <p class="text-muted small mb-0">&copy; {{ date('Y') }} Dealer Resmi Mobil Suzuki. Hak Cipta Dilindungi.
+            </p>
         </div>
     </footer>
 @endsection

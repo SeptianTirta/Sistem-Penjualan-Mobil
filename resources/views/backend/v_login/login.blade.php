@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Masuk | Suzuki Ratan</title>
+    <title>Masuk | Sigma Automobil</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
@@ -61,11 +61,6 @@
             padding: 40px;
         }
 
-        .brand-logo {
-            font-size: 2.5rem;
-            color: #EA5555;
-        }
-
         .form-control {
             padding: 12px;
             border-radius: 10px;
@@ -109,7 +104,7 @@
                 <h1>Temukan Mobil Impianmu</h1>
                 <p>
                     Sistem penjualan mobil modern untuk pengalaman terbaik.
-                    Jelajahi berbagai pilihan mobil dengan harga terbaik.
+                    Jelajahi berbagai pilihan mobil dengan harga terbaik bersama Sigma Automobil.
                 </p>
             </div>
         </div>
@@ -124,8 +119,9 @@
                 </div>
 
                 <div class="text-center mb-4">
-                    <i class="bi bi-car-front-fill brand-logo"></i>
-                    <h4 class="fw-bold mt-2">SUZUKI RATAN</h4>
+                    <img src="{{ asset('img/logo-sigma-automobil.png') }}" alt="Sigma Automobil" height="45"
+                        class="mb-3">
+                    <h5 class="fw-bold text-dark mb-1">Selamat Datang Kembali</h5>
                     <small class="text-muted">Silakan login ke akun Anda</small>
                 </div>
 
@@ -146,11 +142,25 @@
                     </div>
 
                     <div class="mb-4">
-                        <label class="small fw-bold">Password</label>
-                        <input type="password" name="password" class="form-control" required>
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <label class="form-label fw-bold small m-0" style="color: #001437;">Kata Sandi</label>
+                            <a href="#" class="small fw-bold text-danger text-decoration-none"
+                                style="font-size: 13px;">Lupa Sandi?</a>
+                        </div>
+
+                        <div class="input-group">
+                            <input type="password" name="password" id="passwordInput"
+                                class="form-control form-control-lg fs-6" placeholder="Masukkan kata sandi..." required
+                                style="border-right: none;">
+
+                            <button class="btn btn-outline-secondary bg-white" type="button" id="togglePassword"
+                                style="border-color: #dee2e6; border-left: none;">
+                                <i class="bi bi-eye-slash text-muted" id="eyeIcon"></i>
+                            </button>
+                        </div>
                     </div>
 
-                    <button class="btn btn-login w-100 text-white shadow-sm">
+                    <button class="btn btn-login w-100 text-white shadow-sm mt-2">
                         Masuk
                     </button>
                 </form>
@@ -179,6 +189,20 @@
 
     </div>
 
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const togglePassword = document.querySelector('#togglePassword');
+            const passwordInput = document.querySelector('#passwordInput');
+            const eyeIcon = document.querySelector('#eyeIcon');
+
+            togglePassword.addEventListener('click', function(e) {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                eyeIcon.classList.toggle('bi-eye');
+                eyeIcon.classList.toggle('bi-eye-slash');
+            });
+        });
+    </script>
 </body>
 
 </html>

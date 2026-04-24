@@ -6,6 +6,7 @@ use App\Http\Controllers\Backend\TipeController;
 use App\Http\Controllers\Backend\MobilController;
 use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\GoogleAuthController;
+
 /*
 |--------------------------------------------------------------------------
 | FRONTEND ROUTES (Publik & Pelanggan)
@@ -22,11 +23,16 @@ Route::middleware(['auth', 'role:2'])->group(function () {
     Route::get('/mobil/{id}/booking', [FrontendController::class, 'booking'])->name('booking.mobil');
     Route::post('/booking/store', [FrontendController::class, 'bookingStore'])->name('booking.store');
     Route::get('/pesanan-saya', [FrontendController::class, 'pesananSaya'])->name('pesanan.saya');
+
+    // ======== RUTE PROFIL BARU ========
+    Route::get('/profil', [FrontendController::class, 'profil'])->name('profil.index');
+    Route::put('/profil/update', [FrontendController::class, 'profilUpdate'])->name('profil.update');
 });
 
 // Rute Login Google
 Route::get('/auth/google', [GoogleAuthController::class, 'redirect'])->name('google.login');
 Route::get('/auth/google/callback', [GoogleAuthController::class, 'callback'])->name('google.callback');
+
 /*
 |--------------------------------------------------------------------------
 | AUTHENTICATION ROUTES (Login & Logout)
@@ -46,7 +52,6 @@ Route::get('/logout', [AuthController::class, 'logout'])->name('backend.logout')
 
 // BLOK 1: ADMIN DEALER & SUPER ADMIN (Role 0 dan 1)
 Route::middleware(['auth', 'role:0,1'])->prefix('backend')->name('backend.')->group(function () {
-    // Dashboard Admin dengan Data Statistik & Grafik
     // Dashboard Admin dengan Data Statistik & Grafik REAL-TIME
     Route::get('/beranda', function () {
         // 1. Data Kartu Atas (Tetap)
@@ -56,7 +61,6 @@ Route::middleware(['auth', 'role:0,1'])->prefix('backend')->name('backend.')->gr
         $total_pendapatan = \App\Models\Transaksi::where('status', 'Selesai')->sum('booking_fee');
 
         // 2. Data Grafik: TIPE TERLARIS (Doughnut Chart)
-        // Menghitung jumlah pesanan berdasarkan Tipe Mobil (Top 5)
         $tipeTerlaris = \Illuminate\Support\Facades\DB::table('transaksis')
             ->join('mobils', 'transaksis.mobil_id', '=', 'mobils.id')
             ->join('tipes', 'mobils.tipe_id', '=', 'tipes.id')
@@ -66,30 +70,25 @@ Route::middleware(['auth', 'role:0,1'])->prefix('backend')->name('backend.')->gr
             ->limit(5)
             ->get();
 
-        // Pisahkan nama dan jumlahnya untuk chart
         $label_tipe = $tipeTerlaris->pluck('nama_tipe');
         $data_tipe = $tipeTerlaris->pluck('jumlah');
 
-        // Jika belum ada transaksi sama sekali, beri label default agar grafik tidak kosong/error
-        if($label_tipe->isEmpty()) {
+        if ($label_tipe->isEmpty()) {
             $label_tipe = ['Belum Ada Penjualan'];
-            $data_tipe = [1]; 
+            $data_tipe = [1];
         }
 
         // 3. Data Grafik: TREN PESANAN 6 BULAN TERAKHIR REAL-TIME (Bar Chart)
         $label_bulan = [];
         $data_penjualan = [];
 
-        // Menggunakan Carbon untuk mundur 5 bulan ke belakang sampai bulan saat ini
         for ($i = 5; $i >= 0; $i--) {
             $bulan = \Carbon\Carbon::now()->subMonths($i);
-            // Simpan nama bulan & tahun (Contoh: "April 2026")
-            $label_bulan[] = $bulan->translatedFormat('F Y'); 
-            
-            // Hitung transaksi riil di bulan & tahun tersebut
+            $label_bulan[] = $bulan->translatedFormat('F Y');
+
             $jumlahPesanan = \App\Models\Transaksi::whereMonth('created_at', $bulan->month)
-                                      ->whereYear('created_at', $bulan->year)
-                                      ->count();
+                ->whereYear('created_at', $bulan->year)
+                ->count();
             $data_penjualan[] = $jumlahPesanan;
         }
 
@@ -113,13 +112,10 @@ Route::middleware(['auth', 'role:0,1'])->prefix('backend')->name('backend.')->gr
     // ROUTE DATA PESANAN
     Route::get('/pesanan', [\App\Http\Controllers\Backend\PesananController::class, 'index'])->name('pesanan.index');
     Route::put('/pesanan/{id}/status', [\App\Http\Controllers\Backend\PesananController::class, 'updateStatus'])->name('pesanan.updateStatus');
-
 });
 
 // BLOK 2: SANGAT RAHASIA - HANYA SUPER ADMIN (Role 1)
 Route::middleware(['auth', 'role:1'])->prefix('backend')->name('backend.')->group(function () {
-    
     // ROUTE DATA USER (Terkunci rapat, hanya Bos yang bisa masuk)
     Route::resource('user', \App\Http\Controllers\Backend\UserController::class);
-
 });

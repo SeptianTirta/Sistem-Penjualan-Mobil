@@ -104,4 +104,26 @@ class FrontendController extends Controller
 
         return view('frontend.pesanan_saya', compact('pesanan'));
     }
+    // Menampilkan Halaman Profil
+    public function profil()
+    {
+        return view('frontend.profil');
+    }
+
+    // Menyimpan Perubahan Profil (Nama & No HP)
+    public function profilUpdate(Request $request)
+    {
+        $request->validate([
+            'nama' => 'required|string|max:255',
+            'no_hp' => 'required|string|max:20',
+        ]);
+
+        $user = \App\Models\User::find(auth()->id());
+        $user->update([
+            'nama' => $request->nama,
+            'no_hp' => $request->no_hp,
+        ]);
+
+        return redirect()->back()->with('success', 'Profil berhasil diperbarui!');
+    }
 }
