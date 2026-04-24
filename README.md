@@ -1,3 +1,4 @@
+````markdown
 # 🚗 Sigma Automobil - Sistem Informasi Dealer Mobil Terintegrasi
 
 ![Laravel](https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)
@@ -14,8 +15,20 @@
 1. **Autentikasi Modern (SSO):** Pengguna dapat mendaftar secara manual atau _login_ instan dengan sekali klik menggunakan integrasi **Google OAuth 2.0**.
 2. **Automated Payment Gateway:** Terintegrasi langsung dengan **Midtrans Snap API**. Pembayaran DP/Booking Fee divalidasi secara otomatis melalui sistem _Webhook/Callback_.
 3. **Katalog Armada Dinamis:** Filter cerdas berdasarkan tipe mobil, dilengkapi manajemen status ketersediaan unit.
-4. **Member Area:** Dashboard khusus bagi pelanggan untuk melacak riwayat transaksi dan status pesanan.
+4. **Member Area Premium:** Dashboard khusus bagi pelanggan untuk melacak riwayat transaksi, melihat detail SPK, dan mengubah profil.
 5. **Role-Based Access Control (RBAC):** Sistem manajemen akses ketat yang memisahkan otoritas antara Pelanggan, Admin (Operasional), dan Super Admin (Manajemen).
+6. **Classic Modern UI/UX:** Antarmuka pengguna yang bersih, responsif, dan profesional untuk pengalaman navigasi terbaik di perangkat _desktop_ maupun _mobile_.
+
+---
+
+## 📸 Tangkapan Layar (Screenshots)
+
+_(Akan diperbarui - Tempatkan screenshot aplikasi di sini)_
+
+- `[Screenshot Beranda & Katalog]`
+- `[Screenshot Form Login & Google SSO]`
+- `[Screenshot Admin Dashboard]`
+- `[Screenshot Pop-up Pembayaran Midtrans]`
 
 ---
 
@@ -67,7 +80,6 @@ erDiagram
         string snap_token "Token Midtrans"
     }
 ```
-
 ````
 
 ### 2. Use Case Diagram
@@ -263,8 +275,6 @@ Ikuti instruksi berikut untuk menjalankan proyek ini di mesin lokal Anda:
     php artisan migrate:fresh --seed
     ```
 
-    _(Perintah `--seed` akan memasukkan dummy data untuk Tipe, Mobil, dan Akun Default)._
-
 5. **Symlink Storage (Untuk Gambar)**
 
     ```bash
@@ -280,4 +290,7 @@ Ikuti instruksi berikut untuk menjalankan proyek ini di mesin lokal Anda:
 ---
 
 _Dibuat untuk keperluan Proyek Web Programming 3 © 2026 Sigma Automobil._
-````
+
+```
+
+```
